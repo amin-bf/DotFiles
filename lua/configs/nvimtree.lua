@@ -1,6 +1,16 @@
 local function my_on_attach(bufnr)
   local api = require "nvim-tree.api"
 
+  function grep_at_current_tree_node()
+    local node = require('nvim-tree.lib').get_node_at_cursor()
+    if not node then
+      return
+    end
+    require('telescope.builtin').live_grep({
+      search_dirs = {node.absolute_path}
+    })
+  end
+
   local function opts(desc)
     return {
       desc = "nvim-tree: " .. desc,
@@ -15,7 +25,8 @@ local function my_on_attach(bufnr)
   api.config.mappings.default_on_attach(bufnr)
 
   -- custom mappings
-  --   vim.keymap.set('n', '<C-t>', api.tree.change_root_to_parent, opts('Up'))
+  vim.keymap.set('n', 'gr', grep_at_current_tree_node, opts('Live Grep'))
+  vim.keymap.set('n', '<leader>gr', grep_at_current_tree_node, opts('Live Grep'))
   --   vim.keymap.set('n', '?', api.tree.toggle_help, opts('Help'))
 end
 
