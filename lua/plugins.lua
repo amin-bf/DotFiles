@@ -1,9 +1,10 @@
 local table = {"nvim-lua/plenary.nvim", {
   "williamboman/mason.nvim",
-  cmd = {"Mason", "MasonInstall", "MasonInstallAll", "MasonUpdate"},
-  config = function()
-    require"configs.mason".init()
-  end
+  cmd = {"Mason", "MasonInstall", "MasonInstallAll", "MasonUpdate"}
+  -- config = function()
+  --   require"configs.mason".init()
+  -- end
+}, {"williamboman/mason-lspconfig.nvim" -- lazy = false
 }, {
   "nvim-tree/nvim-tree.lua",
   dependencies = {{
@@ -39,7 +40,8 @@ local table = {"nvim-lua/plenary.nvim", {
   event = {"BufReadPre", "BufNewFile", "User FilePost"},
   config = function()
     require"configs.lsp".init()
-  end
+  end,
+  dependencies = {'nvimdev/lspsaga.nvim'}
 }, -- load luasnips + cmp related in insert mode only
 {
   "hrsh7th/nvim-cmp",
@@ -251,6 +253,19 @@ local table = {"nvim-lua/plenary.nvim", {
   config = function(_, opts)
     require("which-key").setup(opts)
   end
+}, {
+  'simrat39/rust-tools.nvim',
+  event = "BufReadPre",
+  config = function()
+    require('rust-tools').setup({
+      server = {
+        capabilities = vim.lsp.protocol.make_client_capabilities()
+      }
+    })
+  end
+}, {
+  "LunarVim/breadcrumbs.nvim",
+  dependencies = {{"SmiteshP/nvim-navic"}}
 }}
 
 return table

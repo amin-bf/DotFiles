@@ -8,6 +8,7 @@ local opts = {
 return {
   init = function()
     require("mason").setup(opts)
+    require("mason-lspconfig").setup()
 
     -- custom nvchad cmd to install all mason binaries listed
     vim.api.nvim_create_user_command("MasonInstallAll", function()

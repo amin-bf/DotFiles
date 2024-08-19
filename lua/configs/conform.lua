@@ -22,10 +22,5 @@ local opts = {
 return {
   init = function()
     require("conform").setup(opts)
-
-    -- custom nvchad cmd to install all mason binaries listed
-    vim.api.nvim_create_user_command("MasonInstallAll", function()
-      vim.cmd("MasonInstall " .. table.concat(opts.ensure_installed, " "))
-    end, {})
   end
 }

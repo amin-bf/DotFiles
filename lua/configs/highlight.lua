@@ -40,11 +40,6 @@ hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_ex
 
 return {
   init = function()
-    require("mason").setup(opts)
 
-    -- custom nvchad cmd to install all mason binaries listed
-    vim.api.nvim_create_user_command("MasonInstallAll", function()
-      vim.cmd("MasonInstall " .. table.concat(opts.ensure_installed, " "))
-    end, {})
   end
 }
