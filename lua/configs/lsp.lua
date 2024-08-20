@@ -10,7 +10,7 @@ end
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 
 capabilities.textDocument.completion.completionItem = {
-  documentationFormat = {"markdown", "plaintext"},
+  documentationFormat = { "markdown", "plaintext" },
   snippetSupport = true,
   preselectSupport = true,
   insertReplaceSupport = true,
@@ -18,20 +18,20 @@ capabilities.textDocument.completion.completionItem = {
   deprecatedSupport = true,
   commitCharactersSupport = true,
   tagSupport = {
-    valueSet = {1}
+    valueSet = { 1 }
   },
   resolveSupport = {
-    properties = {"documentation", "detail", "additionalTextEdits"}
+    properties = { "documentation", "detail", "additionalTextEdits" }
   }
 }
 
-local servers = {"lua_ls", "html", "cssls", "volar", "tsserver", "rust_analyzer"}
+local servers = { "lua_ls", "html", "cssls", "volar", "tsserver", "rust_analyzer" }
 
 local masonOpts = {
-  ensure_installed = { -- lua stuff
-  "lua-language-server", -- web dev stuff
-  "css-lsp", "html-lsp", "typescript-language-server", "prettier", "vue-language-server", "eslint-lsp",
-  "js-debug-adapter", "chrome-debug-adapter"}
+  ensure_installed = {   -- lua stuff
+    "lua-language-server", -- web dev stuff
+    "css-lsp", "html-lsp", "typescript-language-server", "prettier", "vue-language-server", "eslint-lsp",
+    "js-debug-adapter", "chrome-debug-adapter" }
 }
 
 return {
@@ -47,7 +47,7 @@ return {
       if server == "lua_ls" then
         settings.Lua = {
           diagnostics = {
-            globals = {"vim"}
+            globals = { "vim" }
           },
           workspace = {
             library = {
@@ -61,16 +61,16 @@ return {
         }
       end
       if server == "tsserver" then
-        settings.filetypes = {"typescript", "javascript", "javascriptreact", "typescriptreact", "vue", "json"}
+        settings.filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue", "json" }
         settings.init_options = {
           preferences = {
             disableSuggestions = true
           },
-          plugins = {{
+          plugins = { {
             name = "@vue/typescript-plugin",
             location = "/opt/homebrew/lib/node_modules/@vue/typescript-plugin",
-            languages = {"vue", "javascript", "typescript"}
-          }}
+            languages = { "vue", "javascript", "typescript" }
+          } }
         }
       end
 
@@ -84,7 +84,6 @@ return {
     require('lspsaga').setup({
       symbol_in_winbar = {
         enable = false,
-        folder_level = 5
       }
     })
     require("nvim-navic").setup {
