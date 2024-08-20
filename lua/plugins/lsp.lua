@@ -1,8 +1,8 @@
 ---@diagnostic disable-next-line: undefined-global
 local vim = vim -- This tells the LS that `vim` is a valid global
-local lspconfig = require "lspconfig"
 
--- disable semantic tokens
+local servers = { "lua_ls", "html", "cssls", "volar", "tsserver", "rust_analyzer" }
+
 local on_init = function(client, _)
   client.server_capabilities.semanticTokensProvider = nil
 end
@@ -10,7 +10,7 @@ end
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 
 capabilities.textDocument.completion.completionItem = {
-  documentationFormat = {"markdown", "plaintext"},
+  documentationFormat = { "markdown", "plaintext" },
   snippetSupport = true,
   preselectSupport = true,
   insertReplaceSupport = true,
@@ -18,27 +18,46 @@ capabilities.textDocument.completion.completionItem = {
   deprecatedSupport = true,
   commitCharactersSupport = true,
   tagSupport = {
-    valueSet = {1}
+    valueSet = { 1 }
   },
   resolveSupport = {
-    properties = {"documentation", "detail", "additionalTextEdits"}
+    properties = { "documentation", "detail", "additionalTextEdits" }
   }
 }
 
-local servers = {"lua_ls", "html", "cssls", "volar", "tsserver", "rust_analyzer"}
-
-local masonOpts = {
-  ensure_installed = { -- lua stuff
-  "lua-language-server", -- web dev stuff
-  "css-lsp", "html-lsp", "typescript-language-server", "prettier", "vue-language-server", "eslint-lsp",
-  "js-debug-adapter", "chrome-debug-adapter"}
-}
-
 return {
-  init = function()
-    require("mason").setup(masonOpts)
+  "neovim/nvim-lspconfig",
+  priority = 100,
+  event = { "BufReadPre", "BufNewFile", "User FilePost" },
+  opts = {
+    ensure_installed = {     -- lua stuff
+      "lua-language-server", -- web dev stuff
+      "css-lsp", "html-lsp", "typescript-language-server", "prettier", "vue-language-server", "eslint-lsp",
+      "js-debug-adapter", "chrome-debug-adapter", "rust-analyzer" }
+  },
+  dependencies = { {
+    'simrat39/rust-tools.nvim',
+    event = "BufReadPre",
+    config = function()
+      require('rust-tools').setup({
+        server = {
+          capabilities = vim.lsp.protocol.make_client_capabilities()
+        }
+      })
+    end
+  }, {
+    "LunarVim/breadcrumbs.nvim",
+    dependencies = { { "SmiteshP/nvim-navic" } }
+  }, { 'nvimdev/lspsaga.nvim' }, { "williamboman/mason-lspconfig.nvim" }, {
+    "williamboman/mason.nvim",
+    cmd = { "Mason", "MasonInstall", "MasonInstallAll", "MasonUpdate" },
+  } },
+  config = function(_, opts)
+    -- disable semantic tokens
+    require("mason").setup(opts)
     require("mason-lspconfig").setup()
 
+    local lspconfig = require "lspconfig"
     for _, server in ipairs(servers) do
       local settings = {
         on_init = on_init,
@@ -47,7 +66,7 @@ return {
       if server == "lua_ls" then
         settings.Lua = {
           diagnostics = {
-            globals = {"vim"}
+            globals = { "vim" }
           },
           workspace = {
             library = {
@@ -61,16 +80,16 @@ return {
         }
       end
       if server == "tsserver" then
-        settings.filetypes = {"typescript", "javascript", "javascriptreact", "typescriptreact", "vue", "json"}
+        settings.filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue", "json" }
         settings.init_options = {
           preferences = {
             disableSuggestions = true
           },
-          plugins = {{
+          plugins = { {
             name = "@vue/typescript-plugin",
             location = "/opt/homebrew/lib/node_modules/@vue/typescript-plugin",
-            languages = {"vue", "javascript", "typescript"}
-          }}
+            languages = { "vue", "javascript", "typescript" }
+          } }
         }
       end
 
@@ -78,13 +97,13 @@ return {
     end
 
     vim.api.nvim_create_user_command("MasonInstallAll", function()
-      vim.cmd("MasonInstall " .. table.concat(masonOpts.ensure_installed, " "))
+      vim.cmd("MasonInstall " .. table.concat(opts.ensure_installed, " "))
     end, {})
 
     require('lspsaga').setup({
       symbol_in_winbar = {
         enable = false,
-        folder_level = 5
+        folder_level = 1
       }
     })
     require("nvim-navic").setup {
