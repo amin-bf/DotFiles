@@ -1,11 +1,11 @@
 return {
   "nvim-treesitter/nvim-treesitter",
-  event = { "BufReadPost", "BufNewFile" },
-  cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
+  event = {"BufReadPost", "BufNewFile"},
+  cmd = {"TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo"},
   build = ":TSUpdate",
   opts = {
-    ensure_installed = { "lua", "vim", "vimdoc", "html", "css", "javascript", "typescript", "tsx", "c", "markdown",
-      "markdown_inline", "vue" },
+    ensure_installed = {"lua", "vim", "vimdoc", "html", "css", "javascript", "typescript", "tsx", "c", "markdown",
+                        "markdown_inline", "vue"},
 
     highlight = {
       enable = true,
@@ -15,5 +15,8 @@ return {
     indent = {
       enable = true
     }
-  }
+  },
+  config = function(_, opts)
+    require("nvim-treesitter.configs").setup(opts)
+  end
 }

@@ -1,3 +1,6 @@
+---@diagnostic disable-next-line: undefined-global
+local vim = vim -- This tells the LS that `vim` is a valid global
+
 local opt = vim.opt
 local g = vim.g
 
@@ -43,6 +46,27 @@ g.mapleader = " "
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "TelescopeResults",
   command = [[setlocal nofoldenable]]
+  -- callback = function(test)
+  --   if test.match == 'neo-tree' then
+  --     vim.print(test)
+  --     vim.cmd("setlocal nofoldenable")
+  --   end
+  -- end
+})
+vim.api.nvim_create_autocmd("CursorMoved", {
+  callback = function(test)
+    if string.find(test.match, "neo-tree", 0, true) then
+      vim.cmd [[setlocal nofoldenable]]
+    end
+  end
+})
+vim.api.nvim_create_autocmd({"FileType", "TabEnter", "WinEnter", "BufEnter", "WinEnter"}, {
+  pattern = "*neo-tree*",
+  callback = function(test)
+    if string.find(test.match, "neo-tree", 0, true) then
+      vim.cmd [[setlocal nofoldenable]]
+    end
+  end
 })
 vim.opt.foldmethod = "indent"
 

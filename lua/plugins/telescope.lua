@@ -92,8 +92,18 @@ return {
         adapters = { --[['pwa-node',--]] "pwa-chrome" --[['pwa-msedge', 'node-terminal', 'pwa-extensionHost'--]] }
       }
 
+      dap.configurations.rust = {
+        type = "server",
+        port = "${port}",
+        name = "Rust",
+        executable = {
+        command = "codelldb",
+        args = { "--port", "${port}" },
+        },
+        }
+
       for _, language in ipairs { "svelte" } do
-        require("dap").configurations[language] = { {
+        dap.configurations[language] = { {
           type = "pwa-chrome",
           name = "Launch Chrome to debug client",
           request = "launch",

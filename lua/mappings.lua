@@ -1,3 +1,6 @@
+---@diagnostic disable-next-line: undefined-global
+local vim = vim -- This tells the LS that `vim` is a valid global
+
 local function map(mode, lhs, rhs, opts)
   local options = {
     noremap = true,
@@ -11,6 +14,7 @@ local function map(mode, lhs, rhs, opts)
   end
   vim.keymap.set(mode, lhs, rhs, options)
 end
+
 
 -- insert Navigation
 map('i', '<C-h>', '<Left>', {
@@ -91,9 +95,12 @@ map('n', '<leader>ls', function()
 end, {
   desc = "LSP definition type"
 })
-map({'n', 'v'}, '<leader>ca', function()
+map({ 'n', 'v' }, '<leader>ca', function()
   vim.lsp.buf.code_action()
 end, {
+  desc = "LSP code actions"
+})
+map({ 'n', 'v' }, '<leader>cr', ':Lspsaga rename<CR>', {
   desc = "LSP code actions"
 })
 
@@ -106,14 +113,14 @@ map('n', '<Esc>', ':noh<CR>', {
   desc = 'Clear highlights'
 })
 
-map('n', '<C-n>', ':NvimTreeToggle<CR>', {
-  desc = 'Toggle NvimTree'
+map('n', '<C-n>', ':Neotree filesystem reveal left toggle<CR>', {
+  desc = 'Toggle Explorer'
 })
 map('n', '<C-s>', ':wa<CR>', {
   desc = 'Save All'
 })
-map('n', '<leader>e', ':NvimTreeFocus<CR>', {
-  desc = 'Focus NvimTree'
+map('n', '<leader>e', ':Neotree filesystem reveal left<CR>', {
+  desc = 'Focus Esplorer'
 })
 map('n', '<leader>fm', function()
   require("conform").format()
@@ -166,17 +173,17 @@ map('n', '<leader>dt', ':DapToggle<CR>', {
 })
 
 -- terminal
-map({'t', 'n'}, '<A-i>', function()
+map({ 't', 'n' }, '<A-i>', function()
   require("nvterm.terminal").toggle "float"
 end, {
   desc = 'Toggle floating term'
 })
-map({'t', 'n'}, '<A-h>', function()
+map({ 't', 'n' }, '<A-h>', function()
   require("nvterm.terminal").toggle "horizontal"
 end, {
   desc = 'Toggle horizontal term'
 })
-map({'t', 'n'}, '<A-v>', function()
+map({ 't', 'n' }, '<A-v>', function()
   require("nvterm.terminal").toggle "vertical"
 end, {
   desc = 'Toggle vertical term'

@@ -21,9 +21,9 @@ return {
         return " " .. icon .. count
       end,
       offsets = { {
-        filetype = "NvimTree",
+        filetype = "neo-tree",
         text = function()
-          return "NVIMTREE TEXT"
+          return "Explorer"
           -- return vim.fn.getcwd()
         end,
         -- highlight = "Directory",
